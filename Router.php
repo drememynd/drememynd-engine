@@ -34,7 +34,6 @@ class Router
 
         $newRoute = self::makeUrl($page, $action);
 
-
         if (self::$url != $newRoute) {
             self::redirect($newRoute);
         }
@@ -48,9 +47,14 @@ class Router
     protected static function getPage($path)
     {
         $page = Application::$defaultPage;
+        
 
         if (!empty($path)) {
             $route = reset($path);
+
+            if (!empty(Application::$extraPageList[$route])) {
+                $page = $route;
+            }
 
             if (!empty(Application::$pageList[$route])) {
                 $page = $route;

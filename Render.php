@@ -32,10 +32,11 @@ class Render
         $layoutFile = self::getLayout();
         $layoutExtras = self::getLayoutExtras();
 
+        $vars['content'] = self::render($pageFile, $vars);
+
         foreach ($layoutExtras as $name => $path) {
             $vars[$name] = self::render($path, $vars);
         }
-        $vars['content'] = self::render($pageFile, $vars);
 
         $html = self::render($layoutFile, $vars);
 
@@ -45,6 +46,10 @@ class Render
     protected static function getPage($page)
     {
         $pagePath = Application::$viewRoot . _DS . $page . '.php';
+
+        if (!is_file($pagePath)) {
+            $pagePath = Application::$viewRoot . _DS . 'layout' . _DS . $page . '.php';
+        }
 
         if (!is_file($pagePath)) {
             $pagePath = Application::$defaultView;
@@ -86,17 +91,19 @@ class Render
         if (!is_dir($layoutDir)) {
             return $extras;
         }
-
         if ($layoutDir != $engLayoutDir) {
             $extras = self::getExtraList($layoutDir);
+            $extraLayouts = self::getExtraList($layoutDir, true);
         }
         $more = self::getExtraList($engLayoutDir);
-        $result = array_merge($more, $extras);
+        $moreLayouts = self::getExtraList($engLayoutDir, true);
+
+        $result = array_merge($more, $extras, $moreLayouts, $extraLayouts);
 
         return $result;
     }
 
-    protected static function getExtraList($dir)
+    protected static function getExtraList($dir, $layouts = false)
     {
         $extras = [];
         $files = glob($dir . _DS . '*.php');
@@ -104,8 +111,9 @@ class Render
         if (!empty($files)) {
             foreach ($files as $filePath) {
                 $file = basename($filePath, '.php');
+                $hasLayout = (strpos($file, 'layout') === false) ? false : true;
                 $varName = Strings::snakeToCamel($file, true);
-                if (basename($varName) != 'layout') {
+                if ((($layouts && $hasLayout && $file != 'layout') || (!$layouts && !$hasLayout))) {
                     $extras[$varName] = $filePath;
                 }
             }

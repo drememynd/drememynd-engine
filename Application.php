@@ -29,6 +29,7 @@ class Application
     public static $defaultPage = '';
     public static $defaultAction = '';
     public static $defaultView = '';
+    public static $extraPageList = '';
 
     public static function setUp()
     {
@@ -51,6 +52,7 @@ class Application
         self::$pageList = self::getPageList($ini);
         self::$defaultPage = self::getDefaultPage($ini);
         self::$defaultAction = self::getDefaultAction($ini);
+        self::$extraPageList = self::getExtraPageList($ini);
     }
 
     public static function getControllerClassName($page)
@@ -244,5 +246,87 @@ class Application
         }
 
         return $list;
+    }
+
+    protected static function getExtraPageListbad($ini)
+    {
+        $default = [];
+
+        $views = glob(self::$appRoot . _DS . self::$viewDir . _DS . 'layout' . _DS . '*.php');
+
+        $names = [];
+        foreach ($views as $view) {
+            if ($view == self::$defaultView) {
+                continue;
+            }
+            $name = basename($view, '.php');
+            $fancy = Strings::snakeToWords($name);
+            $names[$name] = $fancy;
+        }
+
+        $start = array_merge($iniList, $names);
+        $list = array_merge($start, $iniList);
+
+        if (empty($list)) {
+            $list = $default;
+        }
+
+        return $list;
+    }
+
+    protected static function getExtraPageList()
+    {
+        $extras = [];
+
+        $layoutDir = Application::$viewRoot . _DS . 'layout';
+        $engLayoutDir = Application::$engineRoot . _DS . 'view' . _DS . 'layout';
+
+        if (!is_dir($layoutDir)) {
+            $layoutDir = $engLayoutDir;
+        }
+
+        if (!is_dir($layoutDir)) {
+            return $extras;
+        }
+
+        if ($layoutDir != $engLayoutDir) {
+            $extras = self::getExtraList($layoutDir);
+        }
+        $more = self::getExtraList($engLayoutDir);
+
+        $result = array_merge($more, $extras);
+
+        return $result;
+    }
+
+    protected static function getExtraList($dir)
+    {
+        $extras = [];
+        $files = glob($dir . _DS . '*.php');
+
+        if (!empty($files)) {
+            foreach ($files as $filePath) {
+                $file = basename($filePath, '.php');
+                $okToUse = self::hasForbiddenWords($file);
+                $fancy = Strings::snakeToWords($file);
+                if ($okToUse) {
+                    $extras[$file] = $fancy;
+                }
+            }
+        }
+
+        return $extras;
+    }
+
+    protected static function hasForbiddenWords($string)
+    {
+        $words = ['small', 'medium', 'large', 'layout'];
+        $clean = true;
+
+        foreach ($words as $word) {
+            $clean &= (strpos($string, $word) === false);
+        }
+
+        return $clean;
     }
 }
