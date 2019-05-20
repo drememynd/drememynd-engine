@@ -13,121 +13,102 @@ use Engine\Utility\Ini;
 class CssPhp
 {
 
+    /**
+     * Create CSS files from the ones in the cssphp directory, if any.
+     * @return null
+     */
     public static function createCss()
     {
-
+        /* nowhere to get content from */
         $dir = realpath(Application::$appRoot . _DS . 'cssphp');
         if (empty($dir)) {
-            return false;
+            return;
+        }
+
+        /* nowhere to write to */
+        $cssPath = Application::$webRoot . _DS . 'css';
+        if (!is_dir($cssPath)) {
+            return;
         }
 
         $files = glob($dir . _DS . '*.css');
 
+        /* no content files to read from */
         if (empty($files)) {
-            return false;
+            return;
         }
 
-        $vars = self::getIniVars($dir);
+        $iniPath = $dir . _DS . 'css_php_vars.ini';
+        $iniTime = self::getFileModTime($iniPath);
+        $vars = self::getIniVars($iniPath);
 
-        foreach ($files as $filePath) {
-            if (self::checkModTime($filePath)) {
-                self::writeCss($filePath, $vars);
+        foreach ($files as $sourcePath) {
+            if (self::weShouldWrite($sourcePath, $iniTime)) {
+                self::writeCss($sourcePath, $vars);
             }
         }
     }
 
-    protected static function writeCss($filePath, $vars)
+    /**
+     * Check the timestamps to see if the file has expired
+     * @param string $sourcePath
+     * @param int $iniTime UNIX time stamp
+     * @return boolean $goodToGo
+     */
+    protected static function weShouldWrite($sourcePath, $iniTime)
     {
-        $content = file_get_contents($filePath);
-        foreach($vars as $name => $value) {
-            $replace = '{$'.$name.'}';
-            $content = str_replace($replace,$value, $content);
-        }
-        
+        $goodToGo = false;
+
+        $sourceTime = self::getFileModTime($sourcePath);
+        $sourceName = basename($sourcePath);
+
         $cssPath = Application::$webRoot . _DS . 'css';
+        $resultPath = $cssPath . _DS . $sourceName;
+        $resultTime = self::getFileModTime($resultPath);
 
-        if (is_dir($cssPath)) {
-            $name = basename($filePath);
-            file_put_contents($cssPath . _DS . $name, $content);
+        /* source or ini are newer than result */
+        if ($sourceTime > $resultTime || $iniTime > $resultTime) {
+            $goodToGo = true;
         }
+
+        return $goodToGo;
     }
 
-    protected static function checkModTime($filePath)
+    /**
+     * Actually write the CSS
+     * @param string $sourcePath path to source document
+     * @param string[] $vars substitution variables
+     * @return null
+     */
+    protected static function writeCss($sourcePath, $vars)
     {
-        $name = basename($filePath, '.css');
-        $time = filemtime($filePath);
+        $cssPath = Application::$webRoot . _DS . 'css';
+        $sourceName = basename($sourcePath);
+        $resultPath = $cssPath . _DS . $sourceName;
 
-        $times = self::getModTimes();
-
-        if (!empty($times[$name])) {
-            if ($times[$name] >= $time) {
-                return false;
-            }
+        $content = file_get_contents($sourcePath);
+        foreach ($vars as $name => $value) {
+            $replace = '{$' . $name . '}';
+            $content = str_replace($replace, $value, $content);
         }
 
-        $times[$name] = $time;
-
-        self::writeModTimes($times);
-
-        return true;
+        file_put_contents($resultPath, $content);
     }
 
-    protected static function getModTimes()
-    {
-        $times = [];
-
-        $dataFile = self::getDataFileName();
-
-        $content = file($dataFile);
-
-        if (empty($content)) {
-            return $times;
-        }
-
-        foreach ($content as $line) {
-            $pair = explode(':', $line);
-            if (count($pair) == 2) {
-                $times[$pair[0]] = $pair[1];
-            }
-        }
-
-        return $times;
-    }
-
-    protected static function writeModTimes($times)
-    {
-        $contents = '';
-
-        $lines = [];
-        if (!empty($times)) {
-            foreach ($times as $name => $time) {
-                $lines[] = $name . ':' . $time;
-            }
-            $contents = implode("\n", $lines);
-        }
-
-        $dataFile = self::getDataFileName();
-        file_put_contents($dataFile, $contents);
-    }
-
-    protected static function getDataFileName()
-    {
-        $filePath = __DIR__ . _DS . 'css_php.dat';
-        if (!is_file($filePath)) {
-            file_put_contents($filePath, '');
-        }
-        return $filePath;
-    }
-
-    protected static function getIniVars($dir)
+    /**
+     * Get the variables for substitution in the CSS
+     * @param type $fileName path to INI file
+     * @return array
+     */
+    protected static function getIniVars($fileName)
     {
         $vars = [];
 
-        if (!is_file($dir . _DS . 'css_php_vars.ini')) {
+        if (!is_file($fileName)) {
             return $vars;
         }
 
-        $ini = Ini::parse($dir . _DS . 'css_php_vars.ini');
+        $ini = Ini::parse($fileName);
         if (empty($ini)) {
             return $vars;
         }
@@ -137,5 +118,21 @@ class CssPhp
         }
 
         return $vars;
+    }
+
+    /**
+     * Returns 0 if the file doesn't exist
+     * @param string $filePath path to file
+     * @return int UNIX time stamp
+     */
+    protected static function getFileModTime($filePath)
+    {
+        $time = 0;
+
+        if (is_file($filePath)) {
+            $time = filemtime($filePath);
+        }
+
+        return $time;
     }
 }
