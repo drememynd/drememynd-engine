@@ -4,7 +4,6 @@ namespace Engine;
 use Engine\Router;
 use Engine\Render;
 use Engine\Application;
-use Engine\Utility\CssPhp;
 
 require_once 'configure.php';
 
@@ -20,8 +19,7 @@ class Ignition
     {
         Application::setUp();
         self::setUpAutoload();
-
-        CssPhp::createCss();
+        self::developmentConfiguration();       
 
         $controller = Router::route();
 
@@ -36,5 +34,12 @@ class Ignition
         Autoload::addPath(Application::$vendorRoot);
         Autoload::addPath(Application::$appRoot);
         Autoload::setup();
+    }
+    
+    protected static function developmentConfiguration()
+    {
+        if(is_file(Application::$webRoot._DS.'dev_config.php')) {
+            include_once Application::$webRoot._DS.'dev_config.php';
+        }
     }
 }
