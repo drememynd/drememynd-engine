@@ -1,7 +1,7 @@
 <?php
 namespace Engine\Utility;
 
-use Engine\Application;
+use Engine\Engine\Application;
 use Engine\Utility\Ini;
 use Autoprefixer;
 

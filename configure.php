@@ -2,8 +2,8 @@
 
 require_once 'utility/Ini.php';
 require_once 'utility/Strings.php';
-require_once 'Application.php';
-require_once 'Autoload.php';
+require_once 'engine/Application.php';
+require_once 'engine/Autoload.php';
 
 defined('NAMESPACE_SEPARATOR') || define('NAMESPACE_SEPARATOR', '\\');
 defined('URL_SEPARATOR') || define('URL_SEPARATOR', '/');

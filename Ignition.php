@@ -1,9 +1,10 @@
 <?php
 namespace Engine;
 
-use Engine\Router;
-use Engine\Render;
-use Engine\Application;
+use Engine\Engine\Router;
+use Engine\Engine\Render;
+use Engine\Engine\Application;
+use Engine\Engine\Autoload;
 
 require_once 'configure.php';
 
@@ -19,7 +20,7 @@ class Ignition
     {
         Application::setUp();
         self::setUpAutoload();
-        self::developmentConfiguration();       
+        self::developmentConfiguration();
 
         $controller = Router::route();
 
@@ -35,11 +36,11 @@ class Ignition
         Autoload::addPath(Application::$appRoot);
         Autoload::setup();
     }
-    
+
     protected static function developmentConfiguration()
     {
-        if(is_file(Application::$webRoot._DS.'dev_config.php')) {
-            include_once Application::$webRoot._DS.'dev_config.php';
+        if (is_file(Application::$webRoot . _DS . 'dev_config.php')) {
+            include_once Application::$webRoot . _DS . 'dev_config.php';
         }
     }
 }

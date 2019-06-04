@@ -1,8 +1,8 @@
 <?php
-namespace Engine;
+namespace Engine\Engine;
 
 use Engine\Utility\Strings;
-use Engine\Application;
+use Engine\Engine\Application;
 
 /**
  * Description of Control
@@ -31,6 +31,7 @@ class Control
     public static function getController($page)
     {
         $class = Application::getControllerClassName($page);
+
         $controller = new $class($page);
 
         return $controller;
@@ -38,7 +39,7 @@ class Control
 
     protected function init()
     {
-        
+
     }
 
     protected function before($params = [])

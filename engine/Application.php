@@ -1,5 +1,5 @@
 <?php
-namespace Engine;
+namespace Engine\Engine;
 
 use Engine\Utility\Ini;
 use Engine\Utility\Strings;
@@ -16,11 +16,13 @@ class Application
     public static $webRoot = '';
     public static $vendorRoot = '';
     public static $engineRoot = '';
+    public static $classesRoot = '';
     public static $appRoot = '';
     public static $viewRoot = '';
     public static $controlRoot = '';
     /* application directories */
     public static $engineDir = '';
+    public static $classesDir = '';
     public static $appDir = '';
     public static $viewDir = '';
     public static $controlDir = '';
@@ -34,9 +36,11 @@ class Application
     public static function setUp()
     {
         self::$webRoot = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT', FILTER_SANITIZE_STRING);
-        self::$engineRoot = __DIR__;
+        self::$engineRoot = dirname(__DIR__);
+        self::$classesRoot = __DIR__;
         self::$engineDir = basename(__DIR__);
-        self::$vendorRoot = dirname(__DIR__);
+        self::$vendorRoot = dirname(self::$engineRoot);
+        self::$classesDir = str_replace(self::$vendorRoot,'', self::$classesRoot);
 
         $ini = Ini::parse(self::$webRoot . _DS . 'app_config.ini');
 
@@ -68,14 +72,14 @@ class Application
         }
 
         if (!is_file($filePath)) {
-            $nsPath = self::$engineDir;
-            $filePath = self::$engineRoot . _DS . $name . '.php';
+            $nsPath = self::$classesDir;
+            $filePath = self::$classesRoot . _DS . $name . '.php';
         }
 
         if (!is_file($filePath)) {
-            $nsPath = self::$engineDir;
+            $nsPath = self::$classesDir;
             $name = 'Control';
-            $filePath = self::$engineRoot . _DS . 'Control.php';
+            $filePath = self::$classesRoot . _DS . 'Control.php';
         }
 
         $nameSpace = Strings::pathToNameSpace($nsPath);

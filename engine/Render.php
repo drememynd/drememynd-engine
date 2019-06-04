@@ -1,8 +1,8 @@
 <?php
-namespace Engine;
+namespace Engine\Engine;
 
-use Engine\Control;
-use Engine\Application;
+use Engine\Engine\Control;
+use Engine\Engine\Application;
 use Engine\Utility\Strings;
 
 /**

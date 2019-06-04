@@ -26,28 +26,65 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
+@media screen and (max-width: 419px) {
+    html {
+        font-size: 0.8em;
+    }
+}
+
+
+
 h1 {
-    font-size: 3rem;
+    font-size: 1.5rem;
 }
 h2 {
-    font-size: 2.6rem;
+    font-size: 1.4rem;
 }
 h3 {
-    font-size: 2.2rem;
+    font-size: 1.3rem;
 }
 h4 {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
 }
 h5 {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
 }
 h6 {
     font-size: 1rem;
 }
 
+@media screen and (min-width: 480px) {
+    h1 {
+        font-size: 3rem;
+    }
+    h2 {
+        font-size: 2.6rem;
+    }
+    h3 {
+        font-size: 2.2rem;
+    }
+    h4 {
+        font-size: 1.8rem;
+    }
+    h5 {
+        font-size: 1.4rem;
+    }
+    h6 {
+        font-size: 1rem;
+    }
+}
+
 img {
     max-width: 100%;
     height: auto;
+}
+
+
+@media screen and (max-width: 479px) {
+    img {
+        max-width: 30vw;
+        height: auto;
+    }
 }
 
 #content-body {
@@ -61,14 +98,19 @@ img {
     max-width: 1024px;
     color: {content_text_color};
     background-color: {content_background_color};
-    border-left: {content_border_width} {body_background_color} solid;
-    border-right: {content_border_width} {body_background_color} solid;
     overflow-y: hidden;
 }
 
 @media screen and (max-width: 1023px){
     #content-body {
         max-width: 100%;
+    }
+}
+
+@media screen and (min-width: 1024px){
+    #content-body {
+        border-left: {content_border_width} {body_background_color} solid;
+        border-right: {content_border_width} {body_background_color} solid;
     }
 }
 
@@ -104,41 +146,41 @@ img {
 
 /* alignment classes */
 /* row */
-#content-body .row > div.align-left {
+#content-body .row > *.align-left {
     justify-content: flex-start;
 }
-#content-body .row > div.align-right {
+#content-body .row > *.align-right {
     justify-content: flex-end;
 }
-#content-body .row > div.align-center {
+#content-body .row > *.align-center {
     justify-content: center;
 }
-#content-body .row > div.align-top {
+#content-body .row > *.align-top {
     align-items:flex-start;
 }
-#content-body .row > div.align-bottom {
+#content-body .row > *.align-bottom {
     align-items:flex-end;
 }
-#content-body .row > div.align-middle {
+#content-body .row > *.align-middle {
     align-items: center;
 }
 /* column */
-#content-body .column > div.align-left {
+#content-body .column > *.align-left {
     justify-content: flex-start;
 }
-#content-body .column > div.align-right {
+#content-body .column > *.align-right {
     justify-content: flex-end;
 }
-#content-body .column > div.align-center {
+#content-body .column > *.align-center {
     justify-content: center;
 }
-#content-body .column > div.align-top {
+#content-body .column > *.align-top {
     align-items:flex-start;
 }
-#content-body .column > div.align-bottom {
+#content-body .column > *.align-bottom {
     align-items:flex-end;
 }
-#content-body .column > div.align-middle {
+#content-body .column > *.align-middle {
     align-items: center;
 }
 
@@ -187,162 +229,162 @@ img {
 }
 
 /* behaviors */
-#content-body div.sm-shrink {
+#content-body *.sm-shrink {
     flex-grow: 0;
 }
-#content-body div.sm-grow {
+#content-body *.sm-grow {
     flex-grow: 1;
 }
-#content-body div.sm-wrap {
+#content-body *.sm-wrap {
     flex-wrap: wrap;
 }
-#content-body div.sm-nowrap {
+#content-body *.sm-nowrap {
     flex-wrap: nowrap;
 }
 
 @media screen and (min-width: 480px) {
-    #content-body div.md-shrink {
+    #content-body *.md-shrink {
         flex-grow: 0;
     }
-    #content-body div.md-grow {
+    #content-body *.md-grow {
         flex-grow: 1;
     }
-    #content-body div.md-wrap {
+    #content-body *.md-wrap {
         flex-wrap: wrap;
     }
-    #content-body div.md-nowrap {
+    #content-body *.md-nowrap {
         flex-wrap: nowrap;
     }
 }
 
 @media screen and (min-width: 1024px) {
-    #content-body div.lg-shrink {
+    #content-body *.lg-shrink {
         flex-grow: 0;
     }
-    #content-body div.lg-grow {
+    #content-body *.lg-grow {
         flex-grow: 1;
     }
-    #content-body div.lg-wrap {
+    #content-body *.lg-wrap {
         flex-wrap: wrap;
     }
-    #content-body div.lg-nowrap {
+    #content-body *.lg-nowrap {
         flex-wrap: nowrap;
     }
 }
 
 /* size specific things */
-#content-body div.sm-1 {
+#content-body *.sm-1 {
     flex-basis: 8.33%;
 }
-#content-body div.sm-2 {
+#content-body *.sm-2 {
     flex-basis: 16.66%;
 }
-#content-body div.sm-3 {
+#content-body *.sm-3 {
     flex-basis: 25%;
 }
-#content-body div.sm-4 {
+#content-body *.sm-4 {
     flex-basis: 33.33%;
 }
-#content-body div.sm-5 {
+#content-body *.sm-5 {
     flex-basis: 41.65%;
 }
-#content-body div.sm-6 {
+#content-body *.sm-6 {
     flex-basis: 50%;
 }
-#content-body div.sm-7 {
+#content-body *.sm-7 {
     flex-basis: 58.33%;
 }
-#content-body div.sm-8 {
+#content-body *.sm-8 {
     flex-basis: 66.66%;
 }
-#content-body div.sm-9 {
+#content-body *.sm-9 {
     flex-basis: 75%;
 }
-#content-body div.sm-10 {
+#content-body *.sm-10 {
     flex-basis: 83.33%;
 }
-#content-body div.sm-11 {
+#content-body *.sm-11 {
     flex-basis: 91.66%;
 }
-#content-body div.sm-12 {
+#content-body *.sm-12 {
     flex-basis: 100%;
 }
 
 @media screen and (min-width: 480px) {
-    #content-body div.md-1 {
+    #content-body *.md-1 {
         flex-basis: 8.33%;
     }
-    #content-body div.md-2 {
+    #content-body *.md-2 {
         flex-basis: 16.66%;
     }
-    #content-body div.md-3 {
+    #content-body *.md-3 {
         flex-basis: 25%;
     }
-    #content-body div.md-4 {
+    #content-body *.md-4 {
         flex-basis: 33.33%;
     }
-    #content-body div.md-5 {
+    #content-body *.md-5 {
         flex-basis: 41.65%;
     }
-    #content-body div.md-6 {
+    #content-body *.md-6 {
         flex-basis: 50%;
     }
-    #content-body div.md-7 {
+    #content-body *.md-7 {
         flex-basis: 58.33%;
     }
-    #content-body div.md-8 {
+    #content-body *.md-8 {
         flex-basis: 66.66%;
     }
-    #content-body div.md-9 {
+    #content-body *.md-9 {
         flex-basis: 75%;
     }
-    #content-body div.md-10 {
+    #content-body *.md-10 {
         flex-basis: 83.33%;
     }
-    #content-body div.md-11 {
+    #content-body *.md-11 {
         flex-basis: 91.66%;
     }
-    #content-body div.md-12 {
+    #content-body *.md-12 {
         flex-basis: 100%;
     }
 }
 
 
 @media screen and (min-width: 1024px) {
-    #content-body div.lg-1 {
+    #content-body *.lg-1 {
         flex-basis: 8.33%;
     }
-    #content-body div.lg-2 {
+    #content-body *.lg-2 {
         flex-basis: 16.66%;
     }
-    #content-body div.lg-3 {
+    #content-body *.lg-3 {
         flex-basis: 25%;
     }
-    #content-body div.lg-4 {
+    #content-body *.lg-4 {
         flex-basis: 33.33%;
     }
-    #content-body div.lg-5 {
+    #content-body *.lg-5 {
         flex-basis: 41.65%;
     }
-    #content-body div.lg-6 {
+    #content-body *.lg-6 {
         flex-basis: 50%;
     }
-    #content-body div.lg-7 {
+    #content-body *.lg-7 {
         flex-basis: 58.33%;
     }
-    #content-body div.lg-8 {
+    #content-body *.lg-8 {
         flex-basis: 66.66%;
     }
-    #content-body div.lg-9 {
+    #content-body *.lg-9 {
         flex-basis: 75%;
     }
-    #content-body div.lg-10 {
+    #content-body *.lg-10 {
         flex-basis: 83.33%;
     }
-    #content-body div.lg-11 {
+    #content-body *.lg-11 {
         flex-basis: 91.66%;
     }
-    #content-body div.lg-12 {
+    #content-body *.lg-12 {
         flex-basis: 100%;
     }
 }
@@ -393,17 +435,17 @@ a:hover, a:focus {
     color: {link_focus_color};
 }
 
-.menu .is-active > a {
+.menu a.is-active {
     color: {menu_active_text};
     background-color: {menu_active_background};
 }
 
-.menu .is-active > a:hover {
+.menu a.is-active:hover {
     color: {menu_active_focus_text};
     background-color: {menu_active_focus_background};
 }
 
-.menu .is-active > a:focus {
+.menu a.is-active:focus {
     color: {menu_active_focus_text};
     background-color: {menu_active_focus_background};
 }
@@ -415,9 +457,11 @@ a:hover, a:focus {
     text-decoration: none;
     white-space:nowrap;
     padding: 0.4rem;
+    display: block;
 }
 .column.menu a {
     text-decoration: none;
     white-space:nowrap;
     padding: 0.4rem;
+    display: block;
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Engine;
+namespace Engine\Engine;
 
 /**
  * Sets Up the Autoload and Defines the Callback

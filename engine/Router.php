@@ -1,9 +1,9 @@
 <?php
-namespace Engine;
+namespace Engine\Engine;
 
 use Engine\Utility\Strings;
-use Engine\Control;
-use Engine\Application;
+use Engine\Engine\Control;
+use Engine\Engine\Application;
 
 /**
  * Description of Router
