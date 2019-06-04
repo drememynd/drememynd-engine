@@ -30,6 +30,7 @@ class Ini
 
 
         $rawIni = parse_ini_file($path, true);
+        
         if (empty($rawIni) || !is_array($rawIni)) {
             return $ini;
         }
