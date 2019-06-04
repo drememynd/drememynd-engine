@@ -1,6 +1,6 @@
-<div class="column menu">
+<div class="row menu sm-12 sm-wrap">
     <?php foreach ($pages as $menuPage => $menuName) : ?>
-        <div class="cell shrink <?php echo ($view->page == $menuPage ? 'is-active' : ''); ?>" >
+        <div class="cell grow <?php echo ($view->page == $menuPage ? 'is-active' : ''); ?>" >
             <a href="/<?php echo $menuPage; ?>">
                 <span><?php echo $menuName; ?></span>
             </a>

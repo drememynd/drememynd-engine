@@ -41,17 +41,17 @@ class Control
         
     }
 
-    protected function before($params)
+    protected function before($params = [])
     {
         return $params;
     }
 
-    protected function index($params)
+    protected function index($params = [])
     {
         return $params;
     }
 
-    protected function after($params)
+    protected function after($params = [])
     {
         return $params;
     }
@@ -76,7 +76,7 @@ class Control
         return false;
     }
 
-    public function __call($action, $params)
+    public function __call($action, $params = [])
     {
         if (in_array($action, ['init', 'before', 'after'])) {
             return;

@@ -28,8 +28,8 @@ class Render
         $vars['view'] = $controller;
         $vars['pages'] = Application::$pageList;
 
-        $pageFile = self::getPage($page);
         $layoutFile = self::getLayout();
+        $pageFile = self::getPage($page);
         $layoutExtras = self::getLayoutExtras();
 
         $vars['content'] = self::render($pageFile, $vars);
@@ -80,6 +80,7 @@ class Render
     protected static function getLayoutExtras()
     {
         $extras = [];
+        $extraLayouts = [];
 
         $layoutDir = Application::$viewRoot . _DS . 'layout';
         $engLayoutDir = Application::$engineRoot . _DS . 'view' . _DS . 'layout';
@@ -99,6 +100,12 @@ class Render
         $moreLayouts = self::getExtraList($engLayoutDir, true);
 
         $result = array_merge($more, $extras, $moreLayouts, $extraLayouts);
+        
+        if(isset($result['wrapper'])) {
+            $wrapper = $result['wrapper'];
+            unset($result['wrapper']);
+            $result['wrapper'] = $wrapper;
+        }
 
         return $result;
     }
