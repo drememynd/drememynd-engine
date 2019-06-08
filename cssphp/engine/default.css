@@ -1,0 +1,43 @@
+/* CSS default styles for DremeMynd Engine Framework */
+
+#content-body {
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    width: 100%;
+    max-width: 1024px;
+    color: {content_text_color};
+    background-color: {content_background_color};
+}
+
+@media screen and (max-width: 1023px){
+    #content-body {
+        max-width: 100%;
+    }
+}
+
+@media screen and (min-width: 1024px){
+    #content-body {
+        border-left: {content_border_width} {body_background_color} solid;
+        border-right: {content_border_width} {body_background_color} solid;
+    }
+}
+
+body {
+    color: {body_text_color};
+    background-color: {body_background_color};
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    margin: 0 0 0 1rem;
+    padding: 0;
+}

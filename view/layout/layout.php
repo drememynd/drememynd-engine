@@ -7,7 +7,8 @@
         <title>Engine: <?php echo $view->pageName; ?></title>
 
         <link rel="stylesheet" href="css/vendor/normalize.css">
-        <link rel="stylesheet" href="/css/vendor/framework.css" />
+        <link rel="stylesheet" href="/css/engine/engine.css" />
+        <?php echo $moreCss; ?>
     </head>
     <body>
         
@@ -17,5 +18,6 @@
 
         <script src="js/vendor/jquery.js"></script>
         <script src="js/vendor/framework.js"></script>
+        <?php echo $moreJs; ?>
     </body>
 </html>

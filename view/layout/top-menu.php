@@ -1,9 +1,7 @@
-<div class="row menu sm-12 sm-wrap">
+<div class="row menu sm-12 sm-nowrap">
     <?php foreach ($pages as $menuPage => $menuName) : ?>
-        <div class="cell sm-grow <?php echo ($view->page == $menuPage ? 'is-active' : ''); ?>" >
-            <a href="/<?php echo $menuPage; ?>">
-                <span><?php echo $menuName; ?></span>
-            </a>
-        </div>
+        <a class="cell sm-grow align-left align-center <?php echo ($view->page == $menuPage ? 'is-active' : ''); ?>" href="/<?php echo $menuPage; ?>">
+            <span><?php echo $menuName; ?></span>
+        </a>
     <?php endforeach; ?>
 </div>

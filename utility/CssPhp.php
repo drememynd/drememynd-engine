@@ -3,6 +3,7 @@ namespace Engine\Utility;
 
 use Engine\Engine\Application;
 use Engine\Utility\Ini;
+use Engine\Utility\Arrays;
 use Autoprefixer;
 
 require_once 'autoprefixer/Autoprefixer.php';
@@ -19,6 +20,7 @@ class CssPhp
     protected static $cssDir = '';
     protected static $engDir = '';
     protected static $appDir = '';
+    protected static $pathWrite = [];
     protected static $engValsTime = 0;
     protected static $appValsTime = 0;
     protected static $iniVars = [];
@@ -41,10 +43,17 @@ class CssPhp
 
         self::setIniVariables();
 
+        $shouldWrite = false;
         foreach ($files as $fileInfo) {
-            if (self::weShouldWrite($fileInfo['name'], $fileInfo['dir'], $fileInfo['origin'])) {
-                self::writeCss($fileInfo['name'], $fileInfo['dir'], $fileInfo['origin']);
-            }
+            $shouldWrite |= self::weShouldWrite($fileInfo['name'], $fileInfo['dir'], $fileInfo['origin'], $fileInfo['target']);
+        }
+
+        if (!$shouldWrite) {
+            return;
+        }
+
+        foreach ($files as $fileInfo) {
+            self::writeCss($fileInfo['name'], $fileInfo['dir'], $fileInfo['origin'], $fileInfo['target']);
         }
     }
 
@@ -97,6 +106,18 @@ class CssPhp
             }
         }
 
+        if (isset($files['base.css'])) {
+            $base = $files['base.css'];
+            unset($files['base.css']);
+            $files = Arrays::unshifAssoc($files, 'base.css', $base);
+        }
+
+        if (isset($files['default.css'])) {
+            $default = $files['default.css'];
+            unset($files['default.css']);
+            $files['default.css'] = $default;
+        }
+
         if (!empty(self::$appDir)) {
             $list = self::globRecursive(self::$appDir . _DS . '*.css');
             foreach ($list as $filePath) {
@@ -116,9 +137,18 @@ class CssPhp
         $path = dirname($filePath);
         $dir = str_replace($orginPath, '', $path);
 
+        $target = Application::$engineDir . '.css';
+        if ($orginPath == self::$appDir) {
+            $target = Application::$appDir . '.css';
+        }
+        if ($orginPath == self::$engDir && strpos($dir, 'vendor') !== false) {
+            $target = $file;
+        }
+
         $info['name'] = $file;
         $info['dir'] = $dir;
         $info['origin'] = $orginPath;
+        $info['target'] = $target;
 
         return $info;
     }
@@ -138,7 +168,7 @@ class CssPhp
             self::$appValsTime = self::getFileModTime($appPath);
             $appVars = self::getIniVars($appPath);
         }
-        
+
         self::$iniVars = array_merge($engVars, $appVars);
     }
 
@@ -149,17 +179,24 @@ class CssPhp
      * @param string $sourcePath
      * @return boolean $goodToGo
      */
-    protected static function weShouldWrite($sourceName, $sourceDir, $sourcePath)
+    protected static function weShouldWrite($sourceName, $sourceDir, $sourcePath, $targetName)
     {
         $goodToGo = false;
 
         $sourceTime = self::getFileModTime($sourcePath . _DS . $sourceDir . _DS . $sourceName);
 
-        $resultTime = self::getFileModTime(self::$cssDir . $sourceDir . _DS . $sourceName);
+        $resultTime = self::getFileModTime(self::$cssDir . $sourceDir . _DS . $targetName);
 
         /* source or ini are newer than result */
         if ($sourceTime > $resultTime || self::$appValsTime > $resultTime || self::$engValsTime > $resultTime) {
             $goodToGo = true;
+        }
+
+        /* if we are going to write this info, and the target hasn't been cleared, clear it */
+        if ($goodToGo && empty(self::$pathWrite[$targetName])) {
+            self::$pathWrite[$targetName] = $targetName;
+            $resultFilePath = self::$cssDir . $sourceDir . _DS . $targetName;
+            file_put_contents($resultFilePath, '');
         }
 
         return $goodToGo;
@@ -171,10 +208,10 @@ class CssPhp
      * @param string $sourcePath path to source document
      * @return null
      */
-    protected static function writeCss($sourceName, $sourceDir, $sourcePath)
+    protected static function writeCss($sourceName, $sourceDir, $sourcePath, $targetName)
     {
         $originFilePath = $sourcePath . $sourceDir . _DS . $sourceName;
-        $resultFilePath = self::$cssDir . $sourceDir . _DS . $sourceName;
+        $resultFilePath = self::$cssDir . $sourceDir . _DS . $targetName;
 
         $content = file_get_contents($originFilePath);
 
@@ -193,18 +230,18 @@ class CssPhp
             throw $ex;
         }
 
-        file_put_contents($resultFilePath, $prefixed);
+        file_put_contents($resultFilePath, $prefixed . "\n", FILE_APPEND);
     }
 
     protected static function printExceptionContent($ex, $filePath)
     {
         $trace = $ex->getTrace();
-        $css = '<pre><br>FILE:<br>' .$filePath.'<br></pre>';
-        
+        $css = '<pre><br>FILE:<br>' . $filePath . '<br></pre>';
+
         if (!empty($trace[0]['args'][0][0])) {
-            $css .= '<pre><br>CSS:<br>' .$trace[0]['args'][0][0].'</pre>';
+            $css .= '<pre><br>CSS:<br>' . $trace[0]['args'][0][0] . '</pre>';
         }
-        
+
         echo $css;
     }
 

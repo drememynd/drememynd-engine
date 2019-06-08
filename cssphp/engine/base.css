@@ -1,0 +1,25 @@
+/* CSS base styles for DremeMynd Engine Framework */
+
+html, body {
+    height: auto;
+    min-height: 100vh;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+ 
+div {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    margin: 0 0 0 1rem;
+    padding: 0;
+}
+
+
+img {
+    max-width: 100%;
+    height: auto;
+}

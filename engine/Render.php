@@ -96,10 +96,16 @@ class Render
             $extras = self::getExtraList($layoutDir);
             $extraLayouts = self::getExtraList($layoutDir, true);
         }
+        
         $more = self::getExtraList($engLayoutDir);
         $moreLayouts = self::getExtraList($engLayoutDir, true);
 
-        $result = array_merge($more, $extras, $moreLayouts, $extraLayouts);
+        $start = [
+            'moreCss' => '',
+            'moreJs' => ''
+        ];
+        
+        $result = array_merge($start, $more, $extras, $moreLayouts, $extraLayouts);
         
         if(isset($result['wrapper'])) {
             $wrapper = $result['wrapper'];
@@ -111,7 +117,7 @@ class Render
     }
 
     protected static function getExtraList($dir, $layouts = false)
-    {
+    {        
         $extras = [];
         $files = glob($dir . _DS . '*.php');
 
